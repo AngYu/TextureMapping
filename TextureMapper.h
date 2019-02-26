@@ -7,11 +7,11 @@ class TextureMapper {
         TextureMapper();
         void runMain();
     private:
-        init();
-        align();
-        reconstruct();
-        patchSearch();
-        voting();
+        void init();
+        void align();
+        void reconstruct();
+        void patchSearch();
+        void vote();
         float distance();
 }
 
