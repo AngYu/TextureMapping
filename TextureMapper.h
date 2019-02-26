@@ -15,7 +15,7 @@ private:
     void patchSearch();
     void vote();
     float distance();
-    
+
 };
 
 #endif
