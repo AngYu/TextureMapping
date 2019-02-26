@@ -1,11 +1,13 @@
 #include "TextureMapper.h"
 
+TextureMapper::TextureMapper() {
+    runMain();
+}
+
 void TextureMapper::runMain() {
     init();
-    while(!converged) {
-        align();
-        reconstruct();
-    }
+    align();
+    reconstruct();
 }
 
 void TextureMapper::align() {
@@ -13,4 +15,14 @@ void TextureMapper::align() {
     vote();
 }
 
-void TextureMapper
+void TextureMapper::patchSearch() {
+
+}
+
+void TextureMapper::vote() {
+
+}
+
+void TextureMapper::reconstruct() {
+
+}
