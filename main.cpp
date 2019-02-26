@@ -253,3 +253,42 @@ Image patchSearch(Image source, Image target, Image mask, int iterations, int pa
 
     return out;
 }
+
+float distance(Image source, Image target, Image mask,
+                           int sx, int sy, int st,
+                           int tx, int ty, int tt,
+                           int patchSize, float threshold) {
+
+    // Do not use patches on boundaries
+    if (tx < patchSize || tx >= target.width-patchSize ||
+        ty < patchSize || ty >= target.height-patchSize) {
+        return HUGE_VAL;
+    }
+
+    // Compute distance between patches
+    // Average L2 distance in RGB space
+    float dist = 0;
+
+    int x1 = max(-patchSize, -sx, -tx);
+    int x2 = min(patchSize, -sx+source.width-1, -tx+target.width-1);
+    int y1 = max(-patchSize, -sy, -ty);
+    int y2 = min(patchSize, -sy+source.height-1, -ty+target.height-1);
+
+    for (int c = 0; c < target.channels; c++) {
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+
+                // Don't stray outside the mask
+                if (mask.defined() && mask(tx+x, ty+y, tt, 0) < 1) return HUGE_VAL;
+
+                float delta = source(sx+x, sy+y, st, c) - target(tx+x, ty+y, tt, c);
+                dist += delta * delta;
+
+                // Early termination
+                if (dist > threshold) {return HUGE_VAL;}
+            }
+        }
+    }
+
+    return dist;
+}
