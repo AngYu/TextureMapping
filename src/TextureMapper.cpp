@@ -1,4 +1,5 @@
 #include "TextureMapper.h"
+#include "PatchMatch.h"
 
 TextureMapper::TextureMapper() {
     runMain();
@@ -16,7 +17,8 @@ void TextureMapper::align() {
 }
 
 void TextureMapper::patchSearch() {
-
+    PatchMatch patchMatcher;
+    patchMatcher = PatchMatch();
 }
 
 void TextureMapper::vote() {
