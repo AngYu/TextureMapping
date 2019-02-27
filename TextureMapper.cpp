@@ -23,16 +23,16 @@ void TextureMapper::align(cv::Mat source, cv::Mat target) {
 *
 **/
 void TextureMapper::patchSearch(cv::Mat source[], cv::Mat target[]) {
-	
-	// For each source pixel, output a 3-vector to the best match in
+    
+    // For each source pixel, output a 3-vector to the best match in
     // the target, with an error as the last channel.
-	int sizes[3] = {source[0].width, source[0].height, /*frames*/ source.size()};
+    int sizes[3] = {source[0].width, source[0].height, /*frames*/ source.size()};
     cv::Mat out(3, sizes, CV_32FC(4));
-	
-	// Iterate over source frames, finding a match in the target where
+    
+    // Iterate over source frames, finding a match in the target where
     // the mask is high
-	
-	for (int t = 0; t < source.frames; t++) {
+    
+    for (int t = 0; t < source.frames; t++) {
         // INITIALIZATION - uniform random assignment
         for (int y = 0; y < source.size().height; y++) {
             for (int x = 0; x < source.size().width; x++) {
@@ -53,34 +53,34 @@ void TextureMapper::patchSearch(cv::Mat source[], cv::Mat target[]) {
             }
         }
     }
-	
-	bool forwardSearch = true;
-	
-	//Split the out matrix into 4 channels for dx, dy, dt, and error.
-	std::vector<cv::Mat> channels(4);
-	cv::split(out, channels);
-	cv::Mat dx = channels[0], dy = channels[1], dt = channels[2], error = channels[3];
-	
-	
-	
+    
+    bool forwardSearch = true;
+    
+    //Split the out matrix into 4 channels for dx, dy, dt, and error.
+    std::vector<cv::Mat> channels(4);
+    cv::split(out, channels);
+    cv::Mat dx = channels[0], dy = channels[1], dt = channels[2], error = channels[3];
+    
+    
+    
 }
 
 float TextureMapper::distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
-								int sx, int sy, int st,
-								int tx, int ty, int tt,
-								int patchSize, int floatThreshold) {
-									
-	// Do not use patches on boundaries
+                                int sx, int sy, int st,
+                                int tx, int ty, int tt,
+                                int patchSize, int floatThreshold) {
+                                    
+    // Do not use patches on boundaries
     if (tx < patchSize || tx >= target.width-patchSize ||
         ty < patchSize || ty >= target.height-patchSize) {
         return HUGE_VAL;
     }
-	
-	// Compute distance between patches
+    
+    // Compute distance between patches
     // Average L2 distance in RGB space
     float dist = 0;
-	
-	int x1 = max(-patchSize, -sx, -tx);
+    
+    int x1 = max(-patchSize, -sx, -tx);
     int x2 = min(patchSize, -sx+source.width-1, -tx+target.width-1);
     int y1 = max(-patchSize, -sy, -ty);
     int y2 = min(patchSize, -sy+source.height-1, -ty+target.height-1);
@@ -110,5 +110,5 @@ void TextureMapper::reconstruct() {
 }
 
 cv::Mat TextureMapper::init() {
-	
+    
 }
