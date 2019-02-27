@@ -4,6 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}",
+                "${workspaceFolder}",
+                "${workspaceFolder}",
                 "${workspaceFolder}"
             ],
             "defines": [
