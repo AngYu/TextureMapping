@@ -33,23 +33,23 @@ void TextureMapper::patchSearch(cv::Mat source[], cv::Mat target[]) {
     // the mask is high
 	
 	for (int t = 0; t < source.frames; t++) {
-		// INITIALIZATION - uniform random assignment
+        // INITIALIZATION - uniform random assignment
         for (int y = 0; y < source.size().height; y++) {
             for (int x = 0; x < source.size().width; x++) {
                 int dx = randomInt(patchSize, target.width-patchSize-1);
                 int dy = randomInt(patchSize, target.height-patchSize-1);
                 int dt = randomInt(0, target.frames-1);
-				unsigned char* p = out.ptr(x, y, t) + 0;
+                unsigned char* p = out.ptr(x, y, t) + 0;
                 *p = dx;
-				p = out.ptr(x, y, t) + 1;
-				*p = dy;
-				p = out.ptr(x, y, t) + 2;
-				*p = dt;
-				p = out.ptr(x, y, t) + 3;
-				*p = distance(source, target, mask,
-											x, y, t,
-											dx, dy, dt,
-											patchSize, HUGE_VAL);
+                p = out.ptr(x, y, t) + 1;
+                *p = dy;
+                p = out.ptr(x, y, t) + 2;
+                *p = dt;
+                p = out.ptr(x, y, t) + 3;
+                *p = distance(source, target, mask,
+                                x, y, t,
+                                dx, dy, dt,
+                                patchSize, HUGE_VAL);
             }
         }
 	}
