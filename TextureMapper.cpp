@@ -5,7 +5,10 @@ TextureMapper::TextureMapper() {
     runMain();
 }
 
-void TextureMapper::runMain() {
+/** 
+** Assuming that source and target are Mat vectors with 3 channels for RGB.
+**/
+void TextureMapper::runMain(std::vector<cv::Mat> source, cv::Mat target) {
     cv::Mat source, cv::Mat target = init();
     align(source, target);
     reconstruct();
@@ -53,13 +56,16 @@ void TextureMapper::patchSearch(cv::Mat source[], cv::Mat target[]) {
 	
 	bool forwardSearch = true;
 	
+	//Split the out matrix into 4 channels for dx, dy, dt, and error.
 	std::vector<cv::Mat> channels(4);
 	cv::split(out, channels);
 	cv::Mat dx = channels[0], dy = channels[1], dt = channels[2], error = channels[3];
 	
+	
+	
 }
 
-float TextureMapper::distance(cv::Mat source, cv::Mat target, cv::Mat mask,
+float TextureMapper::distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
 								int sx, int sy, int st,
 								int tx, int ty, int tt,
 								int patchSize, int floatThreshold) {
@@ -83,10 +89,7 @@ float TextureMapper::distance(cv::Mat source, cv::Mat target, cv::Mat mask,
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
 
-                // Don't stray outside the mask
-                if (mask.defined() && mask(tx+x, ty+y, tt, 0) < 1) return HUGE_VAL;
-
-                float delta = source(sx+x, sy+y, st, c) - target(tx+x, ty+y, tt, c);
+                float delta = source[st].at  (sx+x, sy+y, st, c) - target[tt]. (tx+x, ty+y, tt, c);
                 dist += delta * delta;
 
                 // Early termination
