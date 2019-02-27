@@ -8,14 +8,13 @@ public:
     TextureMapper();
     void runMain();
 
-private:
+private:    
     void init();
     void align();
     void reconstruct();
     void patchSearch();
     void vote();
     float distance();
-
 };
 
 #endif
