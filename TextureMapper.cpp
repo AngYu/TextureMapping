@@ -52,7 +52,7 @@ void TextureMapper::patchSearch(cv::Mat source[], cv::Mat target[]) {
                                 patchSize, HUGE_VAL);
             }
         }
-	}
+    }
 	
 	bool forwardSearch = true;
 	
