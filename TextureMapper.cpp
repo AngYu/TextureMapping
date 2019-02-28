@@ -216,7 +216,7 @@ float TextureMapper::distance(std::vector<cv::Mat> source, std::vector<cv::Mat> 
     int y1 = max(-patchSize, -sy, -ty);
     int y2 = min(patchSize, -sy+source[0].size().height-1, -ty+target[0].size().height-1);
 
-    for (int c = 0; c < target.channels; c++) {
+    for (int c = 0; c < target[0].channels() /*color channels*/; c++) {
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
                 
