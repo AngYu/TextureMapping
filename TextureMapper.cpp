@@ -238,6 +238,19 @@ void TextureMapper::vote() {
 
 }
 
+int TextureMapper::Tixi() {
+    //L is the number of pixels in a patch (7 x 7 = 49)
+    //U and V refer to the number of patches for the completeness and coherence terms, respectively.
+    int L = 49;
+    int alpha = 2;
+    int lambda = 0.1;
+    int term1 = (1/L)*sum1;
+    int term2 = (alpha / L) * sum2;
+    int term3 = (lambda / N) * wi * xi * sum3;
+    int denominator = (U / L) + ((alpha * V) / L) + (lambda * wi * xi);
+    return ((term1 + term2 + term3) / denominator);
+}
+
 void TextureMapper::reconstruct() {
 
 }

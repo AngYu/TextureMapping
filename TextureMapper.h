@@ -16,6 +16,7 @@ private:
     void reconstruct();
     cv::Mat patchSearch(int iterations, int patchSize);
     void vote();
+    int Tixi();
     float distance(int sx, int sy, int st,
                     int tx, int ty, int tt,
                     int patchSize, float threshold);
