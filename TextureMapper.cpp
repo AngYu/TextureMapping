@@ -235,9 +235,13 @@ float TextureMapper::distance(int sx, int sy, int st,
 }
 
 void TextureMapper::vote(cv::Mat patchSearchResult) {
-    //for each image
-        //for each pixel
-            target[t].ptr(x,y) = Tixi(patches);
+    for (int t = 0; t < target.size(); t++) {
+        for (int y = 0; y < target[0].size().height; y++) {
+            for (int x = 0; x < target[0].size().width; x++) {
+                *target[t].ptr(x,y) = Tixi(patches);
+            }
+        }
+    }
 }
 
 int TextureMapper::Tixi(cv::Mat patches) {
