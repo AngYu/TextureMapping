@@ -1,3 +1,4 @@
+#include <vector>
 #include "TextureMapper.h"
 
 TextureMapper::TextureMapper() {
