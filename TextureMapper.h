@@ -9,9 +9,9 @@ public:
 
 private:    
     void init();
-    void align();
+    void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
-    void patchSearch();
+    cv::Mat patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void vote();
     float distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
                                 int sx, int sy, int st,
