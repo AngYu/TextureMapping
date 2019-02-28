@@ -64,9 +64,9 @@ void TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat
         // PROPAGATION
         if (forwardSearch) {
             // Forward propagation - compare left, center and up
-            for (int t = 0; t < source.frames; t++) {
-                for (int y = 1; y < source.height; y++) {
-                    for (int x = 1; x < source.width; x++) {
+            for (int t = 0; t < source.size(); t++) {
+                for (int y = 1; y < source[0].size().height; y++) {
+                    for (int x = 1; x < source[0].size().width; x++) {
                         if (error(x, y, t, 0) > 0) {
                             float distLeft = distance(source, target, mask,
                                                       x, y, t,
@@ -105,9 +105,9 @@ void TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat
 
         } else {
             // Backward propagation - compare right, center and down
-            for (int t = source.frames-1; t >= 0; t--) {
-                for (int y = source.height-2; y >= 0; y--) {
-                    for (int x = source.width-2; x >= 0; x--) {
+            for (int t = source.size()-1; t >= 0; t--) {
+                for (int y = source[0].size().height-2; y >= 0; y--) {
+                    for (int x = source[0].size().width-2; x >= 0; x--) {
                         if (error(x, y, t, 0) > 0) {
                             float distRight = distance(source, target, mask,
                                                        x, y, t,
@@ -148,12 +148,12 @@ void TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat
         forwardSearch = !forwardSearch;
 
         // RANDOM SEARCH
-        for (int t = 0; t < source.frames; t++) {
-            for (int y = 0; y < source.height; y++) {
-                for (int x = 0; x < source.width; x++) {
+        for (int t = 0; t < source.size(); t++) {
+            for (int y = 0; y < source[0].size().height; y++) {
+                for (int x = 0; x < source[0].size().width; x++) {
                     if (error(x, y, t, 0) > 0) {
 
-                        int radius = target.width > target.height ? target.width : target.height;
+                        int radius = target[0].size().width > target[0].size().height ? target[0].size().width : target[0].size().height;
 
                         // search an exponentially smaller window each iteration
                         while (radius > 8) {
@@ -165,13 +165,13 @@ void TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat
                             int minY = (int)dy(x, y, t, 0) - radius;
                             int maxY = (int)dy(x, y, t, 0) + radius + 1;
                             if (minX < 0) { minX = 0; }
-                            if (maxX > target.width) { maxX = target.width; }
+                            if (maxX > target[0].size().width) { maxX = target[0].size().width; }
                             if (minY < 0) { minY = 0; }
-                            if (maxY > target.height) { maxY = target.height; }
+                            if (maxY > target[0].size().height) { maxY = target[0].size().height; }
 
                             int randX = randomInt(minX, maxX-1);
                             int randY = randomInt(minY, maxY-1);
-                            int randT = randomInt(0, target.frames - 1);
+                            int randT = randomInt(0, target.size() - 1);
                             float dist = distance(source, target, mask,
                                                   x, y, t,
                                                   randX, randY, randT,
@@ -219,8 +219,11 @@ float TextureMapper::distance(std::vector<cv::Mat> source, std::vector<cv::Mat> 
     for (int c = 0; c < target.channels; c++) {
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
-
-                float delta = source[st].at  (sx+x, sy+y, st, c) - target[tt]. (tx+x, ty+y, tt, c);
+                
+                uint8_t const* sourceValue_ptr(source[st].ptr(sx+x, sy+y) + c);
+                uint8_t const* targetValue_ptr(target[tt].ptr(tx+x, ty+y) + c);
+                
+                float delta = *sourceValue_ptr - *targetValue_ptr;
                 dist += delta * delta;
 
                 // Early termination
