@@ -1,11 +1,12 @@
 #ifndef TEXTUREMAPPER_H
 #define TEXTUREMAPPER_H
+#include <vector>
 
 class TextureMapper {
 
 public:
     TextureMapper();
-    void runMain();
+    void runMain(std::vector<cv::Mat> source);
 
 private:    
     void init();

@@ -1,5 +1,5 @@
 #include <vector>
-#include <opencv>
+#include <opencv.hpp>
 #include "TextureMapper.h"
 
 TextureMapper::TextureMapper() {
