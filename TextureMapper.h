@@ -13,7 +13,10 @@ private:
     void reconstruct();
     void patchSearch();
     void vote();
-    float distance();
+    float distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
+                                int sx, int sy, int st,
+                                int tx, int ty, int tt,
+                                int patchSize, int floatThreshold);
 };
 
 #endif
