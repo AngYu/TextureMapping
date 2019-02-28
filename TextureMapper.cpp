@@ -253,5 +253,8 @@ void TextureMapper::reconstruct() {
 ** i.e., Ti = Si and Mi = Si.
 **/
 void TextureMapper::init() {
-
+    for (int t = 0; t < source.size(); t++) {
+        target[t] = source[t].clone();
+        texture[t] = source[t].clone();
+    }
 }
