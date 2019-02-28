@@ -116,7 +116,7 @@ cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
 
                             if (distRight < *error.ptr(x, y, t)) {
                                 *dx.ptr(x, y, t) = (*dx.ptr(x+1, y, t))-1;
-                                *dy.ptr(x, y, t) = (*dy.ptr(x+1, y, t);
+                                *dy.ptr(x, y, t) = *dy.ptr(x+1, y, t);
                                 *dt.ptr(x, y, t) = *dt.ptr(x+1, y, t);
                                 *error.ptr(x, y, t) = distRight;
                             }
@@ -198,7 +198,7 @@ cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
 
 float TextureMapper::distance(int sx, int sy, int st,
                                 int tx, int ty, int tt,
-                                int patchSize, int floatThreshold) {
+                                int patchSize, float threshold) {
                                     
     // Do not use patches on boundaries
     if (tx < patchSize || tx >= target[0].size().width-patchSize ||
@@ -252,4 +252,16 @@ void TextureMapper::init() {
         target[t] = source[t].clone();
         texture[t] = source[t].clone();
     }
+}
+
+int TextureMapper::randomInt(int min, int max) {
+    return min + (rand() % static_cast<int>(max - min + 1));
+}
+
+int max(int x, int y, int z) {
+    return std::max(std::max(x, y), z);
+}
+
+int min(int x, int y, int z){
+    return std::min(std::min(x, y), z);
 }

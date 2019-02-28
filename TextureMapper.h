@@ -18,7 +18,8 @@ private:
     void vote();
     float distance(int sx, int sy, int st,
                     int tx, int ty, int tt,
-                    int patchSize, int floatThreshold);
+                    int patchSize, float threshold);
+    int randomInt(int min, int max);
 };
 
 #endif
