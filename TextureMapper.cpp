@@ -12,7 +12,9 @@ TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
 }
 
 void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
-    patchSearch();
+    int iterations = 1;
+    int patchSize = 7;
+    patchSearch(iterations, patchSize);
     vote();
 }
 
