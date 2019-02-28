@@ -193,6 +193,10 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
         }
     }
 
+    //Merge output channels back together
+    std::vector<cv::Mat> outs = {dx, dy, dt, error};
+    cv::merge(outs, out);
+
     return out;
     
 }
