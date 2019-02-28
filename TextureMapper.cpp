@@ -44,7 +44,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                 p = out.ptr(x, y, t) + 2;
                 *p = dt;
                 p = out.ptr(x, y, t) + 3;
-                *p = distance(source, target, mask,
+                *p = distance(source, target,
                                 x, y, t,
                                 dx, dy, dt,
                                 patchSize, HUGE_VAL);
@@ -161,10 +161,10 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                             // Search around current offset vector (distance-weighted)
 
                             // clamp the search window to the image
-                            int minX = (int)dx(x, y, t, 0) - radius;
-                            int maxX = (int)dx(x, y, t, 0) + radius + 1;
-                            int minY = (int)dy(x, y, t, 0) - radius;
-                            int maxY = (int)dy(x, y, t, 0) + radius + 1;
+                            int minX = (int)(*dx.ptr(x, y, t)) - radius;
+                            int maxX = (int)(*dx.ptr(x, y, t)) + radius + 1;
+                            int minY = (int)(*dy.ptr(x, y, t)) - radius;
+                            int maxY = (int)(*dy.ptr(x, y, t)) + radius + 1;
                             if (minX < 0) { minX = 0; }
                             if (maxX > target[0].size().width) { maxX = target[0].size().width; }
                             if (minY < 0) { minY = 0; }
