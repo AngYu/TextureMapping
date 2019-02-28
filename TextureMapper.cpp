@@ -2,15 +2,11 @@
 #include <opencv.hpp>
 #include "TextureMapper.h"
 
-TextureMapper::TextureMapper() {
-    runMain();
-}
-
 /** 
 ** Assuming that source is a vector of cv::Mats with 3 channels for RGB.
 **/
-void TextureMapper::runMain(std::vector<cv::Mat> source) {
-    std::vector<cv::Mat> target, std::vector<cv::Mat> texture = init(source);
+TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
+    init();
     align(source, target);
     reconstruct();
 }
@@ -20,7 +16,10 @@ void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> targ
     vote();
 }
 
-cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
+cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations, int patchSize) {
+
+    // convert patch diameter to patch radius
+    patchSize /= 2;
 
     // For each source pixel, output a 3-vector to the best match in
     // the target, with an error as the last channel.
@@ -253,6 +252,6 @@ void TextureMapper::reconstruct() {
 ** the targets and textures with their corresponding source images,
 ** i.e., Ti = Si and Mi = Si.
 **/
-(cv::Mat, cv::Mat) TextureMapper::init(std::vector<cv::Mat> source) {
-    return source, source;
+void TextureMapper::init() {
+
 }
