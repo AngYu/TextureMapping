@@ -1,6 +1,5 @@
 #ifndef TEXTUREMAPPER_H
 #define TEXTUREMAPPER_H
-#include <vector>
 
 class TextureMapper {
 
