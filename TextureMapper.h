@@ -15,8 +15,8 @@ private:
     void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
     cv::Mat patchSearch(int iterations, int patchSize);
-    void vote();
-    int Tixi();
+    void vote(cv::Mat patchSearchResult);
+    int Tixi(cv::Mat patches);
     float distance(int sx, int sy, int st,
                     int tx, int ty, int tt,
                     int patchSize, float threshold);

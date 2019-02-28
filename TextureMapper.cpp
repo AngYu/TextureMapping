@@ -14,8 +14,8 @@ TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
 void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
     int iterations = 1;
     int patchSize = 7;
-    patchSearch(iterations, patchSize);
-    vote();
+    cv::Mat out = patchSearch(iterations, patchSize);
+    vote(out);
 }
 
 cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
@@ -234,18 +234,34 @@ float TextureMapper::distance(int sx, int sy, int st,
     return dist;
 }
 
-void TextureMapper::vote() {
-
+void TextureMapper::vote(cv::Mat patchSearchResult) {
+    //for each image
+        //for each pixel
+            target[t].ptr(x,y) = Tixi(patches);
 }
 
-int TextureMapper::Tixi() {
+int TextureMapper::Tixi(cv::Mat patches) {
     //L is the number of pixels in a patch (7 x 7 = 49)
+    //su and sv are the source patches overlapping with pixel xi of the target for the completeness and coherence terms, respectively.
+    //yu and yv refer to a single pixel in su and sv , respectively, corresponding to the Xith pixel of the target image. 
     //U and V refer to the number of patches for the completeness and coherence terms, respectively.
     int L = 49;
     int alpha = 2;
     int lambda = 0.1;
+    int sum1 = 0;
+    for (int u = 0; u < U; u++) {
+        sum1 += su * yu;
+    }
     int term1 = (1/L)*sum1;
+    int sum2 = 0;
+    for (int v; v < V; v++) {
+        sum2 += sv * yv;
+    }
     int term2 = (alpha / L) * sum2;
+    int sum3 = 0;
+    for (int k = 0; k < N; k++) {
+        sum3 += Mk * (Xi->k);
+    }
     int term3 = (lambda / N) * wi * xi * sum3;
     int denominator = (U / L) + ((alpha * V) / L) + (lambda * wi * xi);
     return ((term1 + term2 + term3) / denominator);
