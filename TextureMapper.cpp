@@ -246,29 +246,32 @@ void TextureMapper::vote(cv::Mat patchSearchResult) {
     }
 }
 
-int TextureMapper::Tixi(cv::Mat patches) {
+int TextureMapper::Tixi(std::vector<cv::Mat> patches) {
     //L is the number of pixels in a patch (7 x 7 = 49)
     //su and sv are the source patches overlapping with pixel xi of the target for the completeness and coherence terms, respectively.
     //yu and yv refer to a single pixel in su and sv , respectively, corresponding to the Xith pixel of the target image. 
     //U and V refer to the number of patches for the completeness and coherence terms, respectively.
     //wj = (cos(θ)**2) / (d**2), where θ is the angle between the surface
     //normal and the viewing direction at image j and d denotes the distance between the camera and the surface.
+    //I believe N is the number of images.
+    int U = patches.size();
+    int V = patches.size();
     int L = 49;
     int alpha = 2;
     int lambda = 0.1;
     int sum1 = 0;
     for (int u = 0; u < U; u++) {
-        sum1 += su * yu;
+        sum1 += su(yu);
     }
     int term1 = (1/L)*sum1;
     int sum2 = 0;
     for (int v; v < V; v++) {
-        sum2 += sv * yv;
+        sum2 += sv(yv);
     }
     int term2 = (alpha / L) * sum2;
     int sum3 = 0;
     for (int k = 0; k < N; k++) {
-        sum3 += Mk * (Xi->k);
+        sum3 += Mk(Xi->k);
     }
     int term3 = (lambda / N) * wi(xi) * sum3;
     int denominator = (U / L) + ((alpha * V) / L) + (lambda * wi(xi));

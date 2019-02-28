@@ -17,7 +17,7 @@ private:
     int Mixi();
     cv::Mat patchSearch(int iterations, int patchSize);
     void vote(cv::Mat patchSearchResult);
-    int Tixi(cv::Mat patches);
+    int Tixi(std::vector<cv::Mat> patches);
     float distance(int sx, int sy, int st,
                     int tx, int ty, int tt,
                     int patchSize, float threshold);
