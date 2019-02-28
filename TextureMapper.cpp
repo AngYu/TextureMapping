@@ -3,7 +3,7 @@
 #include "TextureMapper.h"
 
 /** 
-** Assuming that source is a vector of cv::Mats with 3 channels for RGB.
+** Assuming that source is a vector of cv::Mats
 **/
 TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
     init();
