@@ -1,5 +1,4 @@
 #include "TextureMapper.h"
-#include "PatchMatch.h"
 
 TextureMapper::TextureMapper() {
     runMain();
