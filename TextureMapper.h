@@ -14,12 +14,11 @@ private:
     void init();
     void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
-    cv::Mat patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations, int patchSize);
+    cv::Mat patchSearch(int iterations, int patchSize);
     void vote();
-    float distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
-                                int sx, int sy, int st,
-                                int tx, int ty, int tt,
-                                int patchSize, int floatThreshold);
+    float distance(int sx, int sy, int st,
+                    int tx, int ty, int tt,
+                    int patchSize, int floatThreshold);
 };
 
 #endif

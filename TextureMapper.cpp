@@ -12,11 +12,11 @@ TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
 }
 
 void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
-    patchSearch(source, target);
+    patchSearch();
     vote();
 }
 
-cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations, int patchSize) {
+cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
 
     // convert patch diameter to patch radius
     patchSize /= 2;
@@ -43,8 +43,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                 p = out.ptr(x, y, t) + 2;
                 *p = dt;
                 p = out.ptr(x, y, t) + 3;
-                *p = distance(source, target,
-                                x, y, t,
+                *p = distance(x, y, t,
                                 dx, dy, dt,
                                 patchSize, HUGE_VAL);
             }
@@ -68,8 +67,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                 for (int y = 1; y < source[0].size().height; y++) {
                     for (int x = 1; x < source[0].size().width; x++) {
                         if (*error.ptr(x, y, t) + 0 > 0) {
-                            float distLeft = distance(source, target,
-                                                      x, y, t,
+                            float distLeft = distance(x, y, t,
                                                       (*dx.ptr(x-1, y, t)) + 1,
                                                       (*dy.ptr(x-1, y, t)),
                                                       (*dt.ptr(x-1, y, t)),
@@ -82,8 +80,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                                 *error.ptr(x, y, t) = distLeft;
                             }
 
-                            float distUp = distance(source, target,
-                                                    x, y, t,
+                            float distUp = distance(x, y, t,
                                                     *dx.ptr(x, y-1, t),
                                                     (*dy.ptr(x, y-1, t))+1,
                                                     *dt.ptr(x, y-1, t),
@@ -109,8 +106,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                 for (int y = source[0].size().height-2; y >= 0; y--) {
                     for (int x = source[0].size().width-2; x >= 0; x--) {
                         if (*error.ptr(x, y, t) > 0) {
-                            float distRight = distance(source, target,
-                                                       x, y, t,
+                            float distRight = distance(x, y, t,
                                                        (*dx.ptr(x+1, y, t))-1,
                                                        *dy.ptr(x+1, y, t),
                                                        *dt.ptr(x+1, y, t),
@@ -123,8 +119,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                                 *error.ptr(x, y, t) = distRight;
                             }
 
-                            float distDown = distance(source, target,
-                                                      x, y, t,
+                            float distDown = distance(x, y, t,
                                                       *dx.ptr(x, y+1, t),
                                                       (*dy.ptr(x, y+1, t))-1,
                                                       *dt.ptr(x, y+1, t),
@@ -172,8 +167,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
                             int randX = randomInt(minX, maxX-1);
                             int randY = randomInt(minY, maxY-1);
                             int randT = randomInt(0, target.size() - 1);
-                            float dist = distance(source, target,
-                                                  x, y, t,
+                            float dist = distance(x, y, t,
                                                   randX, randY, randT,
                                                   patchSize, *error.ptr(x, y, t));
                             if (dist < *error.ptr(x, y, t)) {
@@ -200,8 +194,7 @@ cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::
     
 }
 
-float TextureMapper::distance(std::vector<cv::Mat> source, std::vector<cv::Mat> target,
-                                int sx, int sy, int st,
+float TextureMapper::distance(int sx, int sy, int st,
                                 int tx, int ty, int tt,
                                 int patchSize, int floatThreshold) {
                                     
