@@ -238,6 +238,8 @@ void TextureMapper::vote(cv::Mat patchSearchResult) {
     for (int t = 0; t < target.size(); t++) {
         for (int y = 0; y < target[0].size().height; y++) {
             for (int x = 0; x < target[0].size().width; x++) {
+                //Get the source patches overlapping with pixel (x, y, t) of the target.
+                std::vector<cv::Mat> patches;
                 *target[t].ptr(x,y) = Tixi(patches);
             }
         }
@@ -249,6 +251,8 @@ int TextureMapper::Tixi(cv::Mat patches) {
     //su and sv are the source patches overlapping with pixel xi of the target for the completeness and coherence terms, respectively.
     //yu and yv refer to a single pixel in su and sv , respectively, corresponding to the Xith pixel of the target image. 
     //U and V refer to the number of patches for the completeness and coherence terms, respectively.
+    //wj = (cos(θ)**2) / (d**2), where θ is the angle between the surface
+    //normal and the viewing direction at image j and d denotes the distance between the camera and the surface.
     int L = 49;
     int alpha = 2;
     int lambda = 0.1;
@@ -266,13 +270,31 @@ int TextureMapper::Tixi(cv::Mat patches) {
     for (int k = 0; k < N; k++) {
         sum3 += Mk * (Xi->k);
     }
-    int term3 = (lambda / N) * wi * xi * sum3;
-    int denominator = (U / L) + ((alpha * V) / L) + (lambda * wi * xi);
+    int term3 = (lambda / N) * wi(xi) * sum3;
+    int denominator = (U / L) + ((alpha * V) / L) + (lambda * wi(xi));
     return ((term1 + term2 + term3) / denominator);
 }
 
 void TextureMapper::reconstruct() {
+    for (int t = 0; t < texture.size(); t++) {
+        for (int y = 0; y < texture[0].size().height; y++) {
+            for (int x = 0; x < texture[0].size().width; x++) {
+                *texture[t].ptr(x,y) = Mixi();
+            }
+        }
+    }
+}
 
+int TextureMapper::Mixi() {
+    int numerator = 0;
+    for (int j = 0; j < N; j++) {
+        numerator += wj(Xi->j) * Tj(Xi->j);
+    }
+    int denominator = 0;
+    for (int j = 0; j < N; j++) {
+        denominator += wj(Xi->j);
+    }
+    return numerator / denominator;
 }
 
 /**

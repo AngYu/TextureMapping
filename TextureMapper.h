@@ -14,6 +14,7 @@ private:
     void init();
     void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
+    int Mixi();
     cv::Mat patchSearch(int iterations, int patchSize);
     void vote(cv::Mat patchSearchResult);
     int Tixi(cv::Mat patches);
