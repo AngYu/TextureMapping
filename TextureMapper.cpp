@@ -5,7 +5,7 @@
 /** 
 ** Assuming that source is a vector of cv::Mats
 **/
-TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
+TextureMapper::TextureMapper(std::vector<cv::Mat> source, int patchSize = 7) : source(source), patchSize(patchSize) {
     init();
     align(source, target);
     reconstruct();
@@ -13,13 +13,12 @@ TextureMapper::TextureMapper(std::vector<cv::Mat> source) : source(source) {
 
 void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
     int iterations = 1;
-    int patchSize = 7;
-    cv::Mat completenessPatchMatches = patchSearch(source, target, iterations, patchSize);
-    cv::Mat coherencePatchMatches = patchSearch(target, source, iterations, patchSize);
+    cv::Mat completenessPatchMatches = patchSearch(source, target, iterations);
+    cv::Mat coherencePatchMatches = patchSearch(target, source, iterations);
     vote(completenessPatchMatches, coherencePatchMatches);
 }
 
-cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations, int patchSize) {
+cv::Mat TextureMapper::patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations) {
 
     // convert patch diameter to patch radius
     patchSize /= 2;
@@ -300,21 +299,6 @@ std::vector<std::vector<std::vector<int>>> TextureMapper::findSourcePatches(cv::
     }
 
     return sourcePatches;
-}
-
-bool TextureMapper::isInTargetPatch(cv::Vec<float, 4> targetMatch, int x, int y, int t) {
-    int tx = targetMatch[0];
-    int ty = targetMatch[1];
-    int tz = targetMatch[2];
-    
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-
-    if ( /*tx is in x range*/ && /*ty is in y range*/ && tz == t) {
-        return true;
-    } else return false;
 }
 
 int TextureMapper::Tixi(std::vector<std::vector<int>> completenessPatches, std::vector<std::vector<int>> coherencePatches) {

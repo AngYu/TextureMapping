@@ -4,9 +4,10 @@
 class TextureMapper {
 
 public:
-    TextureMapper(std::vector<cv::Mat> source);
+    TextureMapper(std::vector<cv::Mat> source, int patchSize = 7);
 
 private:
+    int patchSize;
     std::vector<cv::Mat> source;
     std::vector<cv::Mat> target;
     std::vector<cv::Mat> texture;
@@ -15,7 +16,7 @@ private:
     void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
     int Mixi();
-    cv::Mat patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations, int patchSize);
+    cv::Mat patchSearch(std::vector<cv::Mat> source, std::vector<cv::Mat> target, int iterations);
     void vote(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches);
     std::vector<std::vector<std::vector<int>>> findSourcePatches(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches, 
                                                                     int x, int y, int t);
