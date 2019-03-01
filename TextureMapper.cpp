@@ -24,7 +24,7 @@ cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
     patchSize /= 2;
 
     // For each source pixel, output a 3-vector to the best match in
-    // the target, with an error as the last channel.
+    // the target, with an error as the last channel. The 3-vector should be the location of the patch center.
     int sizes[3] = {source[0].size().width, source[0].size().height, /*number of frames*/ source.size()};
     cv::Mat out(3, sizes, CV_32FC(4));
     
@@ -32,7 +32,7 @@ cv::Mat TextureMapper::patchSearch(int iterations, int patchSize) {
     // the mask is high.
     
     for (int t = 0; t < source.size(); t++) {
-        // INITIALIZATION - uniform random assignment
+        // INITIALIZATION - uniform random assignment of out matrix values.
         for (int y = 0; y < source[0].size().height; y++) {
             for (int x = 0; x < source[0].size().width; x++) {
                 int dx = randomInt(patchSize, target[0].size().width-patchSize-1);
@@ -239,14 +239,30 @@ void TextureMapper::vote(cv::Mat patchSearchResult) {
         for (int y = 0; y < target[0].size().height; y++) {
             for (int x = 0; x < target[0].size().width; x++) {
                 //Get the source patches overlapping with pixel (x, y, t) of the target.
-                std::vector<cv::Mat> patches;
+                std::vector<int[3]> patches = findSourcePatches(x, y, t, patchSearchResult);
                 *target[t].ptr(x,y) = Tixi(patches);
             }
         }
     }
 }
 
-int TextureMapper::Tixi(std::vector<cv::Mat> patches) {
+std::vector<int[3]> findSourcePatches(int x, int y, int t, cv::Mat patchSearchResult) {
+    //Get patch around Tixi
+    int x1 = max(-patchSize, -sx, -tx);
+    int x2 = min(patchSize, -sx+source[0].size().width-1, -tx+target[0].size().width-1);
+    int y1 = max(-patchSize, -sy, -ty);
+    int y2 = min(patchSize, -sy+source[0].size().height-1, -ty+target[0].size().height-1);
+    //Find each pixel in the Tixi patch in source
+    for (int t = 0; t < source.size(); t++) {
+        for (int y = 0; y < source[0].size().height; y++) {
+            for (int x = 0; x < source[0].size().width; x++) {
+
+            }
+        }
+    }
+}
+
+int TextureMapper::Tixi(std::vector<int[3]> patches) {
     //L is the number of pixels in a patch (7 x 7 = 49)
     //su and sv are the source patches overlapping with pixel xi of the target for the completeness and coherence terms, respectively.
     //yu and yv refer to a single pixel in su and sv , respectively, corresponding to the Xith pixel of the target image. 
