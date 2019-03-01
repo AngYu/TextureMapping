@@ -240,17 +240,17 @@ void TextureMapper::vote(cv::Mat completenessPatchMatches, cv::Mat coherencePatc
     for (int t = 0; t < target.size(); t++) {
         for (int y = 0; y < target[0].size().height; y++) {
             for (int x = 0; x < target[0].size().width; x++) {
-                std::vector<std::vector<int[3]>> patches = findSourcePatches(completenessPatchMatches, coherencePatchMatches, x, y, t);
-                std::vector<int[3]> completenessPatches = patches[0];
-                std::vector<int[3]> coherencePatches = patches[1];
+                std::vector<std::vector<std::vector<int>>> patches = findSourcePatches(completenessPatchMatches, coherencePatchMatches, x, y, t);
+                std::vector<std::vector<int>> completenessPatches = patches[0];
+                std::vector<std::vector<int>> coherencePatches = patches[1];
                 Tixi(completenessPatches, coherencePatches);
             }
         }
     }
 }
 
-std::vector<std::vector<int[3]>> TextureMapper::findSourcePatches(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches, int x, int y, int t) {
-    std::vector<std::vector<int[3]>> sourcePatches;
+std::vector<std::vector<std::vector<int>>> TextureMapper::findSourcePatches(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches, int x, int y, int t) {
+    std::vector<std::vector<std::vector<int>>> sourcePatches;
     std::vector<int[3]> completenessPatches;
     sourcePatches[0] = completenessPatches;
     std::vector<int[3]> coherencePatches;
@@ -262,7 +262,6 @@ std::vector<std::vector<int[3]>> TextureMapper::findSourcePatches(cv::Mat comple
     int y2 = min(patchSize, -sy+source[0].size().height-1, -ty+target[0].size().height-1);
     
     //Completeness: Find Source patches that have target patches as their most similar patch
-
     //For each pixel in completenessPatchMatches
     for (int st = 0; st < source.size(); st++) {
         for (int sy = 0; sy < source[0].size().height; sy++) {
@@ -270,8 +269,15 @@ std::vector<std::vector<int[3]>> TextureMapper::findSourcePatches(cv::Mat comple
                 cv::Vec<float, 4> patchMatch = completenessPatchMatches.at<cv::Vec<float, 4>>(st, sy, st);
                 int stx = patchMatch[0], sty = patchMatch[1], stt = patchMatch[2];
                 if ( /* is in x range */(stx >= x1 && stx <= x2) && /** is in y range */ (sty >= y1 && sty <= y2) && stt == t) {
-                    int sourcePatch [3] = {sx, sy, st};
-                    sourcePatches[0].push_back(sourcePatch);
+                    //return value of the target pixel within the source patch
+                    std::vector<int> targetPixel;
+                    //Find target pixel in source patch
+                    int targetPixelX = (x - stx) + sx;
+                    int targetPixelY = (y - sty) + sy;
+                    for (int c = 0; c < source[0].channels(); c++) {
+                        targetPixel.push_back(source[st].at<cv::Vec<float, 4>>(targetPixelX, targetPixelY)[c]);
+                    }
+                    sourcePatches[0].push_back(targetPixel);
                 }
             }
         }
@@ -281,8 +287,15 @@ std::vector<std::vector<int[3]>> TextureMapper::findSourcePatches(cv::Mat comple
     for (int patchy = y1; patchy <= y2; patchy++) {
         for (int patchx = x1; patchx <= x2; patchx++) {
             cv::Vec<float, 4> sourcePatchVec = coherencePatchMatches.at<cv::Vec<float, 4>>(patchx, patchy, t);
-            int sourcePatch [3] = {sourcePatchVec[0], sourcePatchVec[1], sourcePatchVec[2]};
-            sourcePatches[1].push_back(sourcePatch);
+            //return value of the target pixel within the source patch
+            std::vector<int> targetPixel;
+            //Find target pixel in source patch
+            int targetPixelX = (x - patchx) + sourcePatchVec[0];
+            int targetPixelY = (y - patchy) + sourcePatchVec[1];
+            for (int c = 0; c < source[0].channels(); c++) {
+                targetPixel.push_back(source[sourcePatchVec[2]].at<cv::Vec<float, 4>>(targetPixelX, targetPixelY)[c]);
+            }
+            sourcePatches[0].push_back(targetPixel);
         }
     }
 
@@ -304,8 +317,7 @@ bool TextureMapper::isInTargetPatch(cv::Vec<float, 4> targetMatch, int x, int y,
     } else return false;
 }
 
-int TextureMapper::Tixi(std::vector<int[3]> completenessPatches, std::vector<int[3]> coherencePatches) {
-    //L is the number of pixels in a patch (7 x 7 = 49)
+int TextureMapper::Tixi(std::vector<std::vector<int>> completenessPatches, std::vector<std::vector<int>> coherencePatches) {
     //su and sv are the source patches overlapping with pixel xi of the target for the completeness and coherence terms, respectively.
     //yu and yv refer to a single pixel in su and sv , respectively, corresponding to the Xith pixel of the target image. 
     //U and V refer to the number of patches for the completeness and coherence terms, respectively.
@@ -314,19 +326,19 @@ int TextureMapper::Tixi(std::vector<int[3]> completenessPatches, std::vector<int
     //I think N is the number of images.
     int U = completenessPatches.size();
     int V = coherencePatches.size();
-    int L = 49;
+    int L = 49; //L is the number of pixels in a patch (7 x 7 = 49)
     int alpha = 2;
     int lambda = 0.1;
     int sum1 = 0;
     for (int u = 0; u < U; u++) {
-        int *upatch = completenessPatches[u];
-        sum1 += su(yu);
+        std::vector<int> upatch = completenessPatches[u];
+        sum1 += upatch;
     }
     int term1 = (1/L)*sum1;
     int sum2 = 0;
     for (int v; v < V; v++) {
-        int *vpatch = coherencePatches[v];
-        sum2 += sv(yv);
+        std::vector<int> vpatch = coherencePatches[v];
+        sum2 += vpatch;
     }
     int term2 = (alpha / L) * sum2;
     int sum3 = 0;
