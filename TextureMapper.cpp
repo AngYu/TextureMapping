@@ -311,7 +311,7 @@ int TextureMapper::Tixi(std::vector<int[3]> completenessPatches, std::vector<int
     //U and V refer to the number of patches for the completeness and coherence terms, respectively.
     //wj = (cos(θ)**2) / (d**2), where θ is the angle between the surface
     //normal and the viewing direction at image j and d denotes the distance between the camera and the surface.
-    //I believe N is the number of images.
+    //I think N is the number of images.
     int U = completenessPatches.size();
     int V = coherencePatches.size();
     int L = 49;
