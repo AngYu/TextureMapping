@@ -352,8 +352,10 @@ void TextureMapper::reconstruct() {
 }
 
 int TextureMapper::Mixi() {
+    int N = texture.size();
     int numerator = 0;
     for (int j = 0; j < N; j++) {
+        //Tj(Xi->j) is the result of projecting target j to camera i
         numerator += wj(Xi->j) * Tj(Xi->j);
     }
     int denominator = 0;
