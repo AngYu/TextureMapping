@@ -250,9 +250,9 @@ void TextureMapper::vote(cv::Mat completenessPatchMatches, cv::Mat coherencePatc
 
 std::vector<std::vector<std::vector<int>>> TextureMapper::findSourcePatches(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches, int x, int y, int t) {
     std::vector<std::vector<std::vector<int>>> sourcePatches;
-    std::vector<int[3]> completenessPatches;
+    std::vector<std::vector<int>> completenessPatches;
     sourcePatches[0] = completenessPatches;
-    std::vector<int[3]> coherencePatches;
+    std::vector<std::vector<int>> coherencePatches;
     sourcePatches[1] = coherencePatches;
     //Find patches in target that contain the pixel
     int x1 = max(-patchSize, -sx, -tx);
