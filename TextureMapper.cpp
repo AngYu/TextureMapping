@@ -333,8 +333,8 @@ int TextureMapper::Tixi(std::vector<std::vector<int>> completenessPatches, std::
     int term2 = (alpha / L) * sum2;
     int sum3 = 0;
     for (int k = 0; k < N; k++) {
-        //Mk(Xi->k) RGB color of the kth texture at pixel Xi->j, i.e., the result of projecting texture k to camera i
-        // (Xi->j is pixel position projected from image i to j)
+        //Mk(Xi->k) RGB color of the kth texture at pixel Xi->k, i.e., the result of projecting texture k to camera i
+        // (Xi->j is pixel position projected from image i to k)
         sum3 += Mk(Xi->k);
     }
     int term3 = (lambda / N) * wi(xi) * sum3;
