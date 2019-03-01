@@ -247,19 +247,23 @@ void TextureMapper::vote(cv::Mat patchSearchResult) {
 }
 
 std::vector<int[3]> findSourcePatches(int x, int y, int t, cv::Mat patchSearchResult) {
+    std::vector<int[3]> patches;
     //Get patch around Tixi
     int x1 = max(-patchSize, -sx, -tx);
     int x2 = min(patchSize, -sx+source[0].size().width-1, -tx+target[0].size().width-1);
     int y1 = max(-patchSize, -sy, -ty);
     int y2 = min(patchSize, -sy+source[0].size().height-1, -ty+target[0].size().height-1);
     //Find each pixel in the Tixi patch in source
-    for (int t = 0; t < source.size(); t++) {
-        for (int y = 0; y < source[0].size().height; y++) {
-            for (int x = 0; x < source[0].size().width; x++) {
-
+    for (int t = 0; t < source.size()) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (out(x, y t) == (/*something in target patch around Xi*/)) {
+                    patches.push_back({x, y, t});
+                }
             }
         }
     }
+    return patches;
 }
 
 int TextureMapper::Tixi(std::vector<int[3]> patches) {
