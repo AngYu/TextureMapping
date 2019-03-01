@@ -21,7 +21,7 @@ private:
     std::vector<std::vector<std::vector<int>>> findSourcePatches(cv::Mat completenessPatchMatches, cv::Mat coherencePatchMatches, 
                                                                     int x, int y, int t);
     bool isInTargetPatch(cv::Vec<float, 4> targetMatch, int x, int y, int t);
-    int Tixi(std::vector<std::vector<int>> completenessPatches, std::vector<std::vector<int>> coherencePatches);
+    int Tixi(std::vector<std::vector<int>> completenessPatches, std::vector<std::vector<int>> coherencePatches, int c);
     float distance(int sx, int sy, int st,
                     int tx, int ty, int tt,
                     int patchSize, float threshold);
