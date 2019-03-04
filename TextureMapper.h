@@ -26,6 +26,7 @@ private:
                     int tx, int ty, int tt,
                     int patchSize, float threshold);
     int randomInt(int min, int max);
+    bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb);
 };
 
 #endif

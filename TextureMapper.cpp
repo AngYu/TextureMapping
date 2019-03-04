@@ -382,6 +382,27 @@ int TextureMapper::randomInt(int min, int max) {
     return min + (rand() % static_cast<int>(max - min + 1));
 }
 
+bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb) {
+    //for each camera
+        //if raster is good
+            glContext->makeCurrent();
+            
+            // render normal & depth
+            rendermanager->renderScene(raster->shot, model, RenderHelper::NORMAL, glContext, my_near[cam_ind]*0.5, my_far[cam_ind]*1.25);
+
+            // Unmaking context current
+            glContext->doneCurrent();
+
+            // For vertex in model
+                //project point to image space
+                //get vector from the point-to-be-colored to the camera center
+                //if inside image
+                    // Do stuff
+            //end for each vertex
+        //end for each raster
+    //end for each camera
+}
+
 int max(int x, int y, int z) {
     return std::max(std::max(x, y), z);
 }
