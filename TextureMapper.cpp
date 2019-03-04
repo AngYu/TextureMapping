@@ -393,6 +393,8 @@ bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, v
             // Unmaking context current
             glContext->doneCurrent();
 
+
+            //THIS IS WHERE THE SEARCH FOR VERTICES IS
             // For vertex in model
                 //project point to image space
                 //get vector from the point-to-be-colored to the camera center
