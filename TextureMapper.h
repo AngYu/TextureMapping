@@ -4,10 +4,11 @@
 class TextureMapper {
 
 public:
-    TextureMapper(std::vector<cv::Mat> source, int patchSize = 7);
+    TextureMapper(PlyModel model, std::vector<cv::Mat> source, std::vector<cv::Mat> TcwPoses, int patchSize = 7);
 
 private:
     int patchSize;
+    std::vector<cv::Mat> TcwPoses;
     std::vector<cv::Mat> source;
     std::vector<cv::Mat> target;
     std::vector<cv::Mat> texture;
@@ -26,7 +27,8 @@ private:
                     int tx, int ty, int tt,
                     int patchSize, float threshold);
     int randomInt(int min, int max);
-    bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb);
+    std::vector<cv::Mat> getRGBD(std::vector<cv::Mat> target, std::vector<cv::Mat> TcwPoses, PlyModel model);
+    bool projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb);
 };
 
 #endif

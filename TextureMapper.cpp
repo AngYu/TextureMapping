@@ -5,7 +5,7 @@
 /** 
 ** Assuming that source is a vector of cv::Mats
 **/
-TextureMapper::TextureMapper(std::vector<cv::Mat> source, int patchSize = 7) : source(source), patchSize(patchSize) {
+TextureMapper::TextureMapper(PlyModel model, std::vector<cv::Mat> source, std::vector<cv::Mat> TcwPoses, int patchSize = 7) : source(source), TcwPoses(TcwPoses), patchSize(patchSize) {
     init();
     align(source, target);
     reconstruct();
@@ -382,8 +382,31 @@ int TextureMapper::randomInt(int min, int max) {
     return min + (rand() % static_cast<int>(max - min + 1));
 }
 
+std::vector<cv::Mat> TextureMapper::getRGBD(std::vector<cv::Mat> target, std::vector<cv::Mat> TcwPoses, PlyModel model) {
+    
+}
+
 bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb) {
+    // accumulation buffers for colors and weights
+    int buff_ind;
+    double *weights;
+    double *acc_red;
+    double *acc_grn;
+    double *acc_blu;
+
+    // init accumulation buffers for colors and weights
+    acc_red = new double[model->cm.vn];
+    acc_grn = new double[model->cm.vn];
+    acc_blu = new double[model->cm.vn];
+    for(int buff_ind=0; buff_ind<model->cm.vn; buff_ind++)
+    {
+        acc_red[buff_ind] = 0.0;
+        acc_grn[buff_ind] = 0.0;
+        acc_blu[buff_ind] = 0.0;
+    }
+
     //for each camera
+    for (int cam = 0; cam < TcwPoses.size(); cam++) {
         //if raster is good
             glContext->makeCurrent();
             
@@ -396,13 +419,14 @@ bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, v
 
             //THIS IS WHERE THE SEARCH FOR VERTICES IS
             // For vertex in model
+            for (int vertex; vertex < ; vertex++) {
                 //project point to image space
                 //get vector from the point-to-be-colored to the camera center
                 //if inside image
-                    // Do stuff
-            //end for each vertex
-        //end for each raster
-    //end for each camera
+                    // add color buffers
+            } //end for each vertex
+    } //end for each camera
+    // Paint model vertices with colors
 }
 
 int max(int x, int y, int z) {
