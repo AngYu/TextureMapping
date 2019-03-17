@@ -383,6 +383,7 @@ int TextureMapper::randomInt(int min, int max) {
 }
 
 std::vector<cv::Mat> TextureMapper::getRGBD(std::vector<cv::Mat> target, std::vector<cv::Mat> TcwPoses, PlyModel model) {
+    //Get depth for all of the pixels. This will either require rasterization or ray-tracing (I need to do more research to determine which one).
     
 }
 
