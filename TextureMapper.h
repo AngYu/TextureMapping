@@ -1,19 +1,23 @@
 #ifndef TEXTUREMAPPER_H
 #define TEXTUREMAPPER_H
 
+struct float3 {float x, y, z;};
+
 class TextureMapper {
 
 public:
-    TextureMapper(PlyModel model, std::vector<cv::Mat> source, std::vector<cv::Mat> TcwPoses, int patchSize = 7);
+    TextureMapper(std::string plyFilename, std::vector<cv::Mat> source, std::vector<cv::Mat> TcwPoses, int patchSize = 7);
 
 private:
     int patchSize;
+    std::vector<float3> vertices;
     std::vector<cv::Mat> TcwPoses;
     std::vector<cv::Mat> source;
     std::vector<cv::Mat> target;
     std::vector<cv::Mat> texture;
 
     void init();
+    void read_ply_file(const std::string & filepath);
     void align(std::vector<cv::Mat> source, std::vector<cv::Mat> target);
     void reconstruct();
     int Mixi();
