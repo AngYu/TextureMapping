@@ -11,21 +11,6 @@
 
 #include "tinyply.h"
 #include "TextureMapper.h"
-#include "example.cpp"
-
-struct float2 { float x, y; };
-struct float3 { float x, y, z; };
-struct double3 { double x, y, z; };
-struct uint3 { uint32_t x, y, z; };
-struct uint4 { uint32_t x, y, z, w; };
-
-struct geometry
-{
-    std::vector<float3> vertices;
-    std::vector<float3> normals;
-    std::vector<float2> texcoords;
-    std::vector<uint3> triangles;
-};
 
 /** 
 ** Assuming that source is a vector of cv::Mats
@@ -446,7 +431,7 @@ bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, v
 
             //THIS IS WHERE THE SEARCH FOR VERTICES IS
             // For vertex in model
-            for (int vertex; vertex < ; vertex++) {
+            for (int vertex; vertex < this->vertices->count; vertex++) {
                 //project point to image space
                 //get vector from the point-to-be-colored to the camera center
                 //if inside image
@@ -525,22 +510,11 @@ void TextureMapper::read_ply_file(const std::string & filepath)
 		if (texcoords) std::cout << "\tRead " << texcoords->count << " total vertex texcoords " << std::endl;
 		if (faces) std::cout << "\tRead " << faces->count << " total faces (triangles) " << std::endl;
 
-		// type casting to your own native types - Option A
-		{
-			const size_t numVerticesBytes = vertices->buffer.size_bytes();
-			std::vector<float3> verts(vertices->count);
-			std::memcpy(verts.data(), vertices->buffer.get(), numVerticesBytes);
-		}
-
-		// type casting to your own native types - Option B
-		{
-			std::vector<float3> verts_floats;
-			std::vector<double3> verts_doubles;
-			if (vertices->t == tinyply::Type::FLOAT32) { /* as floats ... */ }
-			if (vertices->t == tinyply::Type::FLOAT64) { /* as doubles ... */ }
-		}
-
-        TextureMapper::vertices = vertices;
+		const size_t numVerticesBytes = vertices->buffer.size_bytes();
+		std::vector<float3> verts(vertices->count);
+		std::memcpy(verts.data(), vertices->buffer.get(), numVerticesBytes);
+        
+        TextureMapper::vertices = verts;
 	}
 	catch (const std::exception & e)
 	{
