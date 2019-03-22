@@ -12,14 +12,18 @@
 #include "tinyply.h"
 #include "TextureMapper.h"
 
+using namespace tinyply;
+
 /** 
 ** Assuming that source is a vector of cv::Mats
 **/
 TextureMapper::TextureMapper(std::string plyFilename, std::vector<cv::Mat> source, std::vector<cv::Mat> TcwPoses, int patchSize = 7) : source(source), TcwPoses(TcwPoses), patchSize(patchSize) {
-    read_ply_file(plyFilename);
-    init();
-    align(source, target);
-    reconstruct();
+    read_ply_file(plyFilename); //gets vertices from the file
+/*
+       init(); //clones source and target
+        align(source, target);
+        reconstruct(); */
+    projectToSurface();
 }
 
 void TextureMapper::align(std::vector<cv::Mat> source, std::vector<cv::Mat> target) {
@@ -393,12 +397,12 @@ int TextureMapper::randomInt(int min, int max) {
     return min + (rand() % static_cast<int>(max - min + 1));
 }
 
-std::vector<cv::Mat> TextureMapper::getRGBD(std::vector<cv::Mat> target, std::vector<cv::Mat> TcwPoses, PlyModel model) {
+std::vector<cv::Mat> TextureMapper::getRGBD(std::vector<cv::Mat> target, std::vector<cv::Mat> TcwPoses) {
     //Get depth for all of the pixels. This will either require rasterization or ray-tracing (I need to do more research to determine which one).
     
 }
 
-bool TextureMapper::projectToSurface(MeshDocument &md, RichParameterSet & par, vcg::CallBackPos *cb) {
+bool TextureMapper::projectToSurface() {
     // accumulation buffers for colors and weights
     int buff_ind;
     double *weights;
